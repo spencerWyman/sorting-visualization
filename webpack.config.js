@@ -1,18 +1,19 @@
 const path = require('path');
 
 module.exports = {
-  entry: './components/app.jsx',
+  entry: './client/',
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: 'bundle.js',
   },
   devServer: {
-    publicPath: '/build',
-    proxy: {
-      '/': 'http://localhost:3000',
-    },
+    // contentBase: __dirname,
+    publicPath: '/build/',
+    // proxy: {
+    //   '/': 'http://localhost:3000',
+    // },
   },
-  mode: 'production',
+  mode: 'development',
   module: {
     rules: [
       {

@@ -5,7 +5,7 @@ const path = require('path');
 if (process.env.NODE_ENV === 'production') {
   app.get('/', (req, res) => {
     console.log('LOADING PAGE');
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(path.resolve(__dirname,  '../index.html'));
   });
 
   app.get('/styles.css', (req, res) => {
