@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Wrapper from './sortingWrapper.jsx';
 import UI from './userInterface.jsx';
+import AlgoChoice from './algoChoice.jsx';
 
 const MAX_DIGITS = 5;
 
@@ -10,11 +11,13 @@ class App extends React.Component {
     super(props);
     this.state = {
       values: [],
-      swapQueue: []
+      swapQueue: [],
+      algoSelect: 'bubbleSort',
     };
     this.addValue = this.addValue.bind(this);
     this.bubbleSortQueue = this.bubbleSortQueue.bind(this);
     this.sortStep = this.sortStep.bind(this);
+    this.switchAlgo = this.switchAlgo.bind(this);
   }
 
   addValue() {
@@ -43,11 +46,19 @@ class App extends React.Component {
       }
       console.log(swapQueue);
     }
-    this.setState({ swapQueue: swapQueue });
+    return swapQueue;
+  }
+
+  insertionSortQueue() {
+    console.log('INSERTIONSORT');
+    return [];
   }
 
   sortStep() {
-    const swapQueue = [...this.state.swapQueue];
+    let swapQueue = [...this.state.swapQueue];
+    if (swapQueue.length === 0) {
+      swapQueue = this.fillQueue(this.state.algoSelect);
+    }
     if (swapQueue.length > 0) {
       const values = [...this.state.values];
       const swap = swapQueue.shift();
@@ -59,10 +70,30 @@ class App extends React.Component {
     }
   }
 
+  switchAlgo(e) {
+    this.setState({
+      algoSelect: e.target.id
+    })
+  }
+
+  fillQueue(algo) {
+    let swapQueue = [];
+    switch (algo) {
+      case 'bubbleSort':
+        swapQueue = this.bubbleSortQueue()
+        break;
+      case 'insertionSort':
+        swapQueue = this.insertionSortQueue()
+        break;
+    }
+    return swapQueue;
+  }
+
 
   render() {
     return(
       <div className = 'app'>
+        <AlgoChoice algoSelect={this.state.algoSelect} switchAlgo={this.switchAlgo}/>
         <UI addValue={this.addValue} bubbleSortQueue={this.bubbleSortQueue} sortStep={this.sortStep}/>
         <Wrapper values={this.state.values} />
       </div>
