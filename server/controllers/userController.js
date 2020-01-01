@@ -10,7 +10,19 @@ userController.verifyUser = (req, res, next) => {
     } else if (!doc) {
       return next("No such user exists.");
     } else {
-      return next()
+      return next();
+    }
+  })
+}
+
+userController.createUser = (req, res, next) => {
+  User.create({ username: req.body.username, password: req.body.password},
+  function(err) {
+    if (err) {
+      console.log("Error in creating User");
+      return next(err);
+    } else {
+      return next();
     }
   })
 }

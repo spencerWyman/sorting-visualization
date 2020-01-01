@@ -37,6 +37,14 @@ app.post('/login', userController.verifyUser, (req, res) => {
   res.status(200).sendFile(path.resolve(__dirname, '../app.html'))
 })
 
+app.post('/login/signup', (req, res) => {
+  res.status(200).sendFile(path.resolve(__dirname, '../signup.html'));
+})
+
+app.post('/login/createUser', userController.createUser, (req, res) => {
+  res.status(200).sendFile(path.resolve(__dirname, '../index.html'))
+})
+
 app.use((req, res) => {
   res.status(404).send('Uhh, what were you looking for?')
 })
