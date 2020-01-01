@@ -1,6 +1,16 @@
 const express = require('express');
-const app = express();
 const path = require('path');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+const userController = require('./controllers/userController')
+
+const app = express();
+
+const mongoURI = 'mongodb://localhost:27017/sortingAlgorithmsDev'
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true , useCreateIndex: true});
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 if (process.env.NODE_ENV === 'production') {
   app.get('/', (req, res) => {
@@ -22,5 +32,18 @@ if (process.env.NODE_ENV === 'production') {
     console.log('FILE SENT');
   })
 }
+
+app.post('/login', userController.verifyUser, (req, res) => {
+  res.status(200).sendFile(path.resolve(__dirname, '../app.html'))
+})
+
+app.use((req, res) => {
+  res.status(404).send('Uhh, what were you looking for?')
+})
+
+app.use((err, req, res, next) => {
+  console.log('Uncaught middleware error', err);
+  res.status(400).send(err);
+})
 
 app.listen(3000);

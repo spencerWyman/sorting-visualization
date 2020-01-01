@@ -9,9 +9,9 @@ module.exports = {
   devServer: {
     // contentBase: __dirname,
     publicPath: '/build/',
-    // proxy: {
-    //   '/': 'http://localhost:3000',
-    // },
+    proxy: {
+      '/login': 'http://localhost:3000',
+    },
   },
   mode: process.env.NODE_ENV,
   module: {

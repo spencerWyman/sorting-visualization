@@ -36,13 +36,14 @@
 .algo-container {
   display: flex;
   align-self: flex-end;
-
+  margin: 5px;
 }
 
 .algo-container button {
   border: 1px solid grey;
   text-decoration: none;
   outline: none;
+  padding: 5px;
 }
 
 .selected {
