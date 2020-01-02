@@ -49,3 +49,7 @@
 .selected {
   background-color: grey;
 }
+
+.incorrect {
+  background-color: red;
+}

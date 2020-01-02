@@ -10,10 +10,11 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      values: [0, 1, 2],
+      values: [2, 1, 0],
       swapQueue: [],
       selected: [-1, -1],
       algoSelect: 'bubbleSort',
+      incorrect: [-1, -1],
     };
     this.addValue = this.addValue.bind(this);
     this.bubbleSortQueue = this.bubbleSortQueue.bind(this);
@@ -36,7 +37,10 @@ class App extends React.Component {
   }
 
   clearValues() {
-    this.setState({ values: [] });
+    this.setState({
+      values: [],
+      selected: [-1, -1],
+     });
   }
 
   randomValues(min, max, num) {
@@ -44,7 +48,10 @@ class App extends React.Component {
     for (let i = 0; i < num; i++) {
       values.push(Math.floor(Math.random() * (max - min) + min));
     }
-    this.setState({ values });
+    this.setState({
+      values,
+      selected: [-1, -1],
+     });
   }
 
   bubbleSortQueue() {
@@ -115,17 +122,35 @@ class App extends React.Component {
     } else if (selected[1] === -1) {
       selected[1] = index;
     }
-    this.setState({ selected });
+    this.setState({
+      selected,
+      incorrect: [-1, -1],
+     });
   }
 
   swapSelected() {
     const values = [...this.state.values];
+    let swapQueue = [...this.state.swapQueue];
+    if (swapQueue.length === 0) {
+      swapQueue = this.fillQueue(this.state.algoSelect);
+    }
+    const nextSwap = swapQueue.length > 0 ? new Set(swapQueue[0]) : new Set();
     const selected = [...this.state.selected];
-    console.log('selected', selected);
+    let incorrect = false;
     if (selected[0] !== -1 && selected[1] !== -1) {
-      [values[selected[0]], values[selected[1]]] = [values[selected[1]], values[selected[0]]];
+      if (nextSwap.has(selected[0]) && nextSwap.has(selected[1])) {
+        [values[selected[0]], values[selected[1]]] = [values[selected[1]], values[selected[0]]];
+        swapQueue.shift();
+      } else {
+        incorrect = [...selected];
+      }
     };
-    this.setState({ values });
+    this.setState({
+      values,
+      incorrect,
+      swapQueue,
+      selected: [-1, -1],
+    });
   }
 
   fillQueue(algo) {
@@ -150,12 +175,10 @@ class App extends React.Component {
           <button onClick={() => this.randomValues(0, 10, 5)}>RANDOM</button>
           <UI addValue={this.addValue} bubbleSortQueue={this.bubbleSortQueue} sortStep={this.sortStep} clearValues = {this.clearValues} swapSelected={this.swapSelected}/>
         </div>
-        <Wrapper values={this.state.values} selected={this.state.selected} selectBox={this.selectBox}/>
+        <Wrapper values={this.state.values} selected={this.state.selected} selectBox={this.selectBox} incorrect={this.state.incorrect}/>
       </div>
     )
   }
 }
 
 export default App;
-
-// ReactDOM.render(<App />, document.getElementById('app-container'));
