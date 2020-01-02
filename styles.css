@@ -11,6 +11,11 @@
   justify-content: center;
 }
 
+.test-container {
+  display: flex;
+  justify-content: center;
+}
+
 .userInterface {
   display: flex;
   flex-direction: column;
@@ -52,6 +57,10 @@
 
 .incorrect {
   background-color: red;
+}
+
+.sorted {
+  background-color: rgba(10, 200, 50);
 }
 
 .mastered {
