@@ -8,6 +8,8 @@ class UI extends React.Component {
         <input id='inputField' type='text'></input>
         <button onClick={this.props.addValue}>Add</button>
         <button onClick={this.props.sortStep}>Next Step</button>
+        <button onClick={this.props.clearValues}>Clear</button>
+        <button onClick={this.props.swapSelected}>Swap Selected</button>
       </div>
     )
   }

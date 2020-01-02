@@ -10,14 +10,18 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      values: [],
+      values: [0, 1, 2],
       swapQueue: [],
+      selected: [-1, -1],
       algoSelect: 'bubbleSort',
     };
     this.addValue = this.addValue.bind(this);
     this.bubbleSortQueue = this.bubbleSortQueue.bind(this);
     this.sortStep = this.sortStep.bind(this);
     this.switchAlgo = this.switchAlgo.bind(this);
+    this.clearValues = this.clearValues.bind(this);
+    this.selectBox = this.selectBox.bind(this);
+    this.swapSelected = this.swapSelected.bind(this);
   }
 
   addValue() {
@@ -29,6 +33,18 @@ class App extends React.Component {
     this.setState({
       values: values
     })
+  }
+
+  clearValues() {
+    this.setState({ values: [] });
+  }
+
+  randomValues(min, max, num) {
+    let values = [];
+    for (let i = 0; i < num; i++) {
+      values.push(Math.floor(Math.random() * (max - min) + min));
+    }
+    this.setState({ values });
   }
 
   bubbleSortQueue() {
@@ -50,8 +66,19 @@ class App extends React.Component {
   }
 
   insertionSortQueue() {
-    console.log('INSERTIONSORT');
-    return [];
+    const swapQueue = [];
+    const values = [...this.state.values];
+    for (let i = 1; i < values.length; i++) {
+      for (let j = i; j >= 0; j--) {
+        if (values[j] < values[j-1]) {
+          swapQueue.push([j, j-1]);
+          [values[j-1], values[j]] = [values[j], values[j-1]];
+        } else {
+          break;
+        }
+      }
+    }
+    return swapQueue;
   }
 
   sortStep() {
@@ -76,6 +103,31 @@ class App extends React.Component {
     })
   }
 
+  selectBox(e) {
+    const selected = [...this.state.selected]
+    const index = Number(e.target.dataset.index);
+    if (selected[0] === index) {
+      selected[0] = -1;
+    } else if (selected[1] === index) {
+      selected[1] = -1;
+    } else if (selected[0] === -1) {
+      selected[0] = index;
+    } else if (selected[1] === -1) {
+      selected[1] = index;
+    }
+    this.setState({ selected });
+  }
+
+  swapSelected() {
+    const values = [...this.state.values];
+    const selected = [...this.state.selected];
+    console.log('selected', selected);
+    if (selected[0] !== -1 && selected[1] !== -1) {
+      [values[selected[0]], values[selected[1]]] = [values[selected[1]], values[selected[0]]];
+    };
+    this.setState({ values });
+  }
+
   fillQueue(algo) {
     let swapQueue = [];
     switch (algo) {
@@ -93,9 +145,12 @@ class App extends React.Component {
   render() {
     return(
       <div className = 'app'>
-        <AlgoChoice algoSelect={this.state.algoSelect} switchAlgo={this.switchAlgo}/>
-        <UI addValue={this.addValue} bubbleSortQueue={this.bubbleSortQueue} sortStep={this.sortStep}/>
-        <Wrapper values={this.state.values} />
+        <div className = 'UI-container'>
+          <AlgoChoice algoSelect={this.state.algoSelect} switchAlgo={this.switchAlgo}/>
+          <button onClick={() => this.randomValues(0, 10, 5)}>RANDOM</button>
+          <UI addValue={this.addValue} bubbleSortQueue={this.bubbleSortQueue} sortStep={this.sortStep} clearValues = {this.clearValues} swapSelected={this.swapSelected}/>
+        </div>
+        <Wrapper values={this.state.values} selected={this.state.selected} selectBox={this.selectBox}/>
       </div>
     )
   }

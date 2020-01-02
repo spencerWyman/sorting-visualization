@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import App from './components/app.jsx';
 
 // uncomment so that webpack can bundle styles
-// import styles from './scss/application.scss';
+import styles from './../styles.css';
 
 render(
   <App />,
