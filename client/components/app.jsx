@@ -15,6 +15,8 @@ class App extends React.Component {
       selected: [-1, -1],
       algoSelect: 'bubbleSort',
       incorrect: [-1, -1],
+      mastery: [],
+      sorted: false,
     };
     this.addValue = this.addValue.bind(this);
     this.bubbleSortQueue = this.bubbleSortQueue.bind(this);
@@ -23,6 +25,12 @@ class App extends React.Component {
     this.clearValues = this.clearValues.bind(this);
     this.selectBox = this.selectBox.bind(this);
     this.swapSelected = this.swapSelected.bind(this);
+    this.checkSort = this.checkSort.bind(this);
+  }
+
+  componentDidMount() {
+    const mastery = document.cookie.slice(8).split('*');
+    this.setState({ mastery })
   }
 
   addValue() {
@@ -105,7 +113,9 @@ class App extends React.Component {
   }
 
   switchAlgo(e) {
+    const swapQueue = this.fillQueue(e.target.id);
     this.setState({
+      swapQueue,
       algoSelect: e.target.id
     })
   }
@@ -136,7 +146,7 @@ class App extends React.Component {
     }
     const nextSwap = swapQueue.length > 0 ? new Set(swapQueue[0]) : new Set();
     const selected = [...this.state.selected];
-    let incorrect = false;
+    let incorrect = [-1, -1];
     if (selected[0] !== -1 && selected[1] !== -1) {
       if (nextSwap.has(selected[0]) && nextSwap.has(selected[1])) {
         [values[selected[0]], values[selected[1]]] = [values[selected[1]], values[selected[0]]];
@@ -151,6 +161,19 @@ class App extends React.Component {
       swapQueue,
       selected: [-1, -1],
     });
+  }
+
+  checkSort() {
+    const values = [...this.state.values];
+    let sorted = false;
+    for (let i = 1; i < values.length - 1; i++) {
+      if (values[i-1] > values[i]) {
+        this.setState({ sorted });
+        return;
+      }
+    }
+    sorted = true;
+    this.setState({ sorted });
   }
 
   fillQueue(algo) {
@@ -171,8 +194,9 @@ class App extends React.Component {
     return(
       <div className = 'app'>
         <div className = 'UI-container'>
-          <AlgoChoice algoSelect={this.state.algoSelect} switchAlgo={this.switchAlgo}/>
+          <AlgoChoice algoSelect={this.state.algoSelect} switchAlgo={this.switchAlgo} mastery={this.state.mastery}/>
           <button onClick={() => this.randomValues(0, 10, 5)}>RANDOM</button>
+          <button onClick={this.checkSort}>Check Sort</button>
           <UI addValue={this.addValue} bubbleSortQueue={this.bubbleSortQueue} sortStep={this.sortStep} clearValues = {this.clearValues} swapSelected={this.swapSelected}/>
         </div>
         <Wrapper values={this.state.values} selected={this.state.selected} selectBox={this.selectBox} incorrect={this.state.incorrect}/>

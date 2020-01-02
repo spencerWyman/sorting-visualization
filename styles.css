@@ -53,3 +53,7 @@
 .incorrect {
   background-color: red;
 }
+
+.mastered {
+  color: rgba(10, 200, 50);
+}

@@ -2,8 +2,10 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const userController = require('./controllers/userController')
+const cookieController = require('./controllers/cookieController')
 
 const app = express();
 
@@ -11,6 +13,7 @@ const mongoURI = 'mongodb://localhost:27017/sortingAlgorithmsDev'
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true , useCreateIndex: true});
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'production') {
   app.get('/', (req, res) => {
@@ -33,7 +36,7 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
-app.post('/login', userController.verifyUser, (req, res) => {
+app.post('/login', userController.verifyUser, cookieController.setCookie, (req, res) => {
   res.status(200).sendFile(path.resolve(__dirname, '../app.html'))
 })
 

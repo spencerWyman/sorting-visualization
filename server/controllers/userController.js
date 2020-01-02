@@ -1,6 +1,6 @@
 const User = require('../models/userSchema')
 
-userController = {};
+const userController = {};
 
 userController.verifyUser = (req, res, next) => {
   User.findOne({ username: req.body.username, password: req.body.password }, function(err, doc) {
@@ -10,6 +10,9 @@ userController.verifyUser = (req, res, next) => {
     } else if (!doc) {
       return next("No such user exists.");
     } else {
+      res.locals.user = doc.mastery.join('*');
+      console.log('doc.mastery', typeof doc.mastery);
+      console.log('res.locals.user', typeof res.locals.user);
       return next();
     }
   })

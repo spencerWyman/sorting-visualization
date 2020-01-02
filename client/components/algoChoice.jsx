@@ -7,6 +7,9 @@ class AlgoChoice extends React.Component {
       insertionSort: ''
     }
     buttonClass[this.props.algoSelect] = 'selected';
+    for (let mastered of this.props.mastery) {
+      buttonClass[mastered] += ' mastered';
+    }
 
     return (
       <div className = 'algo-container'>
