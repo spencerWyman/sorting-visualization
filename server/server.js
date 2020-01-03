@@ -14,6 +14,7 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true , u
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.json());
 
 if (process.env.NODE_ENV === 'production') {
   app.get('/', (req, res) => {
@@ -48,6 +49,10 @@ app.post('/login/createUser', userController.createUser, (req, res) => {
   res.status(200).sendFile(path.resolve(__dirname, '../index.html'))
 })
 
+app.put('/login/updateMastery', userController.updateMastery, (req, res) => {
+  res.sendStatus(200);
+})
+
 app.use((req, res) => {
   res.status(404).send('Uhh, what were you looking for?')
 })
@@ -56,5 +61,7 @@ app.use((err, req, res, next) => {
   console.log('Uncaught middleware error', err);
   res.status(400).send(err);
 })
+
+
 
 app.listen(3000);

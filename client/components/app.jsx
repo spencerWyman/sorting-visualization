@@ -29,7 +29,11 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    const mastery = document.cookie.slice(8).split('*');
+    const allCookies = document.cookie.split(';');
+    const username = allCookies[0].slice(9);
+    const mastery = allCookies[1].slice(9).split('*');
+    console.log('username', username);
+    console.log('mastery', mastery);
     this.setState({ mastery })
   }
 
@@ -171,7 +175,27 @@ class App extends React.Component {
         return acc && (el >= values[index - 1])
       }
     }, true);
-    this.setState({ sorted });
+    const mastery = [...this.state.mastery];
+    if (sorted && !(mastery.includes(this.state.algoSelect))) {
+      mastery.push(this.state.algoSelect)
+    }
+    fetch('/login/updateMastery', {
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(mastery),
+    })
+    .then(data => {
+      console.log('Successfully updated Mastery');
+    }).catch((error) => {
+      console.log('SERVER ERROR AHHHHH WHY DID IT NOT UPDATE???', error);
+    })
+    this.setState({
+      sorted,
+      mastery,
+    });
+
   }
 
   fillQueue(algo) {

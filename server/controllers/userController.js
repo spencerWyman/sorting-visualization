@@ -10,9 +10,8 @@ userController.verifyUser = (req, res, next) => {
     } else if (!doc) {
       return next("No such user exists.");
     } else {
-      res.locals.user = doc.mastery.join('*');
-      console.log('doc.mastery', typeof doc.mastery);
-      console.log('res.locals.user', typeof res.locals.user);
+      res.locals.username = req.body.username;
+      res.locals.mastery = doc.mastery.join('*');
       return next();
     }
   })
@@ -27,6 +26,17 @@ userController.createUser = (req, res, next) => {
     } else {
       return next();
     }
+  })
+}
+
+userController.updateMastery = (req, res, next) => {
+  User.findOne({ username: req.cookies.username }, function(err, doc) {
+    console.log('doc.username', doc.username);
+    console.log('req.body', req.body);
+    doc.mastery = req.body;
+    console.log('updated doc.mastery', doc.mastery);
+    doc.save()
+    next();
   })
 }
 
