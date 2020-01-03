@@ -10,7 +10,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      values: [2, 1, 0],
+      values: [],
       swapQueue: [],
       selected: [-1, -1],
       algoSelect: 'bubbleSort',
